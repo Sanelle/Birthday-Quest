@@ -55,19 +55,19 @@ const quizQuestions = [
   {
     question: "If you weren't a CA, what would you have been?",
     options: ["Doctor", "Lawyer", "Environmental Scientist", "Economist"],
-    answer: 2,
+    answer: 3,
     hint: "Think life, ocean and animals."
   },
   {
     question: "What are your favourite flowers?",
     options: ["Lillies", "Roses", "Tulips", "Daisy"],
-    answer: 2,
+    answer: 3,
     hint: "Small, sweet, and delightful."
   },
   {
     question: "Which hobby does she love the most?",
     options: ["Dancing", "Reading", "Cooking", "Traveling"],
-    answer: 1,
+    answer: 0,
     hint: "She loves to move to the rhythm."
   },
   {
@@ -382,18 +382,29 @@ function spinWheel() {
  *********************************/
 function showQuiz() {
   const container = document.getElementById("quizContainer");
+  if (!container) {
+    console.error("Quiz container element not found!");
+    return;
+  }
   container.innerHTML = "";
-  // If all questions answered, show the Next button for level progression
+  // If all questions are answered, show the Next button.
   if (currentQuizIndex >= quizQuestions.length) {
-    // Display the Next button
+    // Reveal the Next button
     const nextBtn = document.getElementById("quizNextBtn");
-    nextBtn.style.display = "block";
-    nextBtn.disabled = false;
+    if (nextBtn) {
+      nextBtn.style.display = "block";
+      nextBtn.disabled = false;
+    }
     showPrizeModal("Trivia Complete!", true);
     return;
   }
-  // Hide the Next button if present
-  document.getElementById("quizNextBtn").style.display = "none";
+  // Hide the Next button while quiz is in progress
+  const nextBtn = document.getElementById("quizNextBtn");
+  if (nextBtn) nextBtn.style.display = "none";
+  
+  // Disable the Next button during the question
+  if (nextBtn) nextBtn.disabled = true;
+  
   const q = quizQuestions[currentQuizIndex];
   const questionEl = document.createElement("h2");
   questionEl.textContent = q.question;
@@ -405,7 +416,7 @@ function showQuiz() {
     btn.addEventListener("click", () => checkAnswer(index, btn));
     container.appendChild(btn);
   });
-  // Add hint button for trivia
+  // Add a hint button for trivia
   const hintBtn = document.createElement("button");
   hintBtn.textContent = "Show Hint";
   hintBtn.className = "btn";
@@ -424,14 +435,17 @@ function checkAnswer(selectedIndex, btnElement) {
     quizScore += 100;
     totalScore += 100;
     document.getElementById("quizScore").textContent = quizScore;
-    // Automatically move to the next question after a delay
     setTimeout(() => {
       currentQuizIndex++;
       if (currentQuizIndex < quizQuestions.length) {
         showQuiz();
       } else {
-        // Show Next button when trivia is complete
-        document.getElementById("quizNextBtn").style.display = "block";
+        // When all questions are answered, show the Next button
+        const nextBtn = document.getElementById("quizNextBtn");
+        if (nextBtn) {
+          nextBtn.style.display = "block";
+          nextBtn.disabled = false;
+        }
         showPrizeModal("Trivia Complete!", true);
       }
     }, 2000);
@@ -443,7 +457,11 @@ function checkAnswer(selectedIndex, btnElement) {
       if (currentQuizIndex < quizQuestions.length) {
         showQuiz();
       } else {
-        document.getElementById("quizNextBtn").style.display = "block";
+        const nextBtn = document.getElementById("quizNextBtn");
+        if (nextBtn) {
+          nextBtn.style.display = "block";
+          nextBtn.disabled = false;
+        }
         showPrizeModal("Trivia Complete!", true);
       }
     }, 3000);
