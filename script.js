@@ -146,6 +146,10 @@ function goToWelcomePage() {
 function showVideoGallery() {
   hideAllLevels();
   document.getElementById("videoGallery").classList.add("active");
+  // Allow video to play for some time before closing the modal or transitioning
+  setTimeout(() => {
+    closeVideoModal();
+  }, 5000); // 5 seconds delay
 }
 
 function showPictureGallery() {
@@ -184,6 +188,8 @@ function transitionToLevel(level) {
   currentLevel = level;
   updateProgress(level);
   friendHelpUsed[level] = false;
+  
+  // Clear any level-specific timers if needed
   if (level === 1) {
     currentHintIndex = 0;
     foundWords.clear();
@@ -195,17 +201,21 @@ function transitionToLevel(level) {
     spinCount = 0;
     document.getElementById("spinCount").textContent = spinCount;
     document.getElementById("prizeDisplay").textContent = "";
+    startLevelTimer(2);
   } else if (level === 3) {
     currentQuizIndex = 0;
     quizScore = 0;
     document.getElementById("quizScore").textContent = quizScore;
     showQuiz();
+    startLevelTimer(3);
   } else if (level === 4) {
     remainingBoxes = totalBoxes;
     document.getElementById("remainingBoxes").textContent = remainingBoxes;
     createDealBoxes();
+    startLevelTimer(4);
   } else if (level === 5) {
     createImagePuzzle();
+    startLevelTimer(5);
   } else if (level === 6) {
     document.getElementById("finalScore").textContent = totalScore;
     document.getElementById("prizesWon").textContent = spinCount; // Example metric
@@ -291,8 +301,8 @@ function toggleLetterSelection(cell) {
       document.getElementById("score").textContent = wordPuzzleScore;
       if (foundWords.size === wordPuzzleConfig.words.length) {
         clearInterval(puzzleTimerInterval);
-        // When complete, show prize modal; Claim Prize transitions to Level 2.
-        showPrizeModal("You have won your self a bracelet, like the one on your wishlist. It's definately the           one on your wishlist!", true);
+        // When complete, show prize modal; clicking Next transitions to Level 2.
+        showPrizeModal("You have won your self a bracelet, like the one on your wishlist. It's definitely the one on your wishlist!", true);
       }
     }
   }
@@ -373,12 +383,17 @@ function spinWheel() {
 function showQuiz() {
   const container = document.getElementById("quizContainer");
   container.innerHTML = "";
+  // If all questions answered, show the Next button for level progression
   if (currentQuizIndex >= quizQuestions.length) {
-    document.getElementById("quizNextBtn").disabled = false;
+    // Display the Next button
+    const nextBtn = document.getElementById("quizNextBtn");
+    nextBtn.style.display = "block";
+    nextBtn.disabled = false;
     showPrizeModal("Trivia Complete!", true);
     return;
   }
-  document.getElementById("quizNextBtn").disabled = true;
+  // Hide the Next button if present
+  document.getElementById("quizNextBtn").style.display = "none";
   const q = quizQuestions[currentQuizIndex];
   const questionEl = document.createElement("h2");
   questionEl.textContent = q.question;
@@ -390,6 +405,7 @@ function showQuiz() {
     btn.addEventListener("click", () => checkAnswer(index, btn));
     container.appendChild(btn);
   });
+  // Add hint button for trivia
   const hintBtn = document.createElement("button");
   hintBtn.textContent = "Show Hint";
   hintBtn.className = "btn";
@@ -408,19 +424,29 @@ function checkAnswer(selectedIndex, btnElement) {
     quizScore += 100;
     totalScore += 100;
     document.getElementById("quizScore").textContent = quizScore;
-    showMemePopup();
-    startConfetti();
+    // Automatically move to the next question after a delay
     setTimeout(() => {
       currentQuizIndex++;
-      showQuiz();
-    }, 1500);
+      if (currentQuizIndex < quizQuestions.length) {
+        showQuiz();
+      } else {
+        // Show Next button when trivia is complete
+        document.getElementById("quizNextBtn").style.display = "block";
+        showPrizeModal("Trivia Complete!", true);
+      }
+    }, 2000);
   } else {
     btnElement.classList.add("incorrect");
     showPrizeModal("Incorrect. The correct answer is: " + q.options[q.answer], false);
     setTimeout(() => {
       currentQuizIndex++;
-      showQuiz();
-    }, 2500);
+      if (currentQuizIndex < quizQuestions.length) {
+        showQuiz();
+      } else {
+        document.getElementById("quizNextBtn").style.display = "block";
+        showPrizeModal("Trivia Complete!", true);
+      }
+    }, 3000);
   }
 }
 
@@ -517,7 +543,7 @@ function createImagePuzzle() {
     piece.className = "image-piece";
     piece.dataset.index = i;
     piece.dataset.value = imagePuzzlePieces[i];
-    piece.textContent = imagePuzzlePieces[i] + 1; // For demo purposes
+    piece.textContent = imagePuzzlePieces[i] + 1;
     piece.addEventListener("click", imagePuzzleClick);
     puzzleContainer.appendChild(piece);
   }
@@ -530,7 +556,6 @@ function imagePuzzleClick(e) {
     selectedPiece = piece;
     piece.classList.add("selected");
   } else {
-    // Swap values and labels
     const tempVal = selectedPiece.dataset.value;
     selectedPiece.dataset.value = piece.dataset.value;
     piece.dataset.value = tempVal;
@@ -602,13 +627,12 @@ function closeFriendModal() {
  *********************************/
 function showPrizeModal(text, autoClose = true) {
   const prizeModal = document.getElementById("prizeModal");
-  const prizeTitle = document.getElementById("prizeTitle");
-  prizeTitle.textContent = text;
+  document.getElementById("prizeTitle").textContent = text;
   prizeModal.style.display = "flex";
   if (autoClose) {
     setTimeout(() => {
       closePrizeModal();
-    }, 3000);
+    }, 4000);
   }
 }
 
@@ -620,7 +644,10 @@ function closePrizeModal() {
   } else if (currentLevel === 2) {
     transitionToLevel(3);
   } else if (currentLevel === 3) {
-    document.getElementById("quizNextBtn").disabled = false;
+    // If trivia is complete, the Next button will be shown instead of auto transitioning
+    if (currentQuizIndex >= quizQuestions.length) {
+      document.getElementById("quizNextBtn").style.display = "block";
+    }
   } else if (currentLevel === 4) {
     setTimeout(() => showCelebratoryVideo(), 1000);
   } else if (currentLevel === 5) {
@@ -639,6 +666,26 @@ function showCelebratoryVideo() {
 function closeVideoModal() {
   document.getElementById("videoModal").style.display = "none";
   transitionToLevel(6);
+}
+
+/*********************************
+ * LEVEL TIMER FUNCTION
+ *********************************/
+function startLevelTimer(level) {
+  let levelTime = 60; // 60-second timer per level
+  const timerElement = document.getElementById("levelTimer");
+  timerElement.textContent = `Time left: ${levelTime}s`;
+  const levelTimerInterval = setInterval(() => {
+    levelTime--;
+    timerElement.textContent = `Time left: ${levelTime}s`;
+    if (levelTime <= 0) {
+      clearInterval(levelTimerInterval);
+      showPrizeModal("Time's up! Continue or move to the next level?", false);
+      // Show buttons to allow the user to continue or proceed
+      document.getElementById("continueBtn").style.display = "block";
+      document.getElementById("nextLevelBtn").style.display = "block";
+    }
+  }, 1000);
 }
 
 /*********************************
