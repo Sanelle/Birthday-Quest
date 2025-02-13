@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Manyano's Ultimate Birthday Adventure 🎉</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <!-- Smooth, modern font -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- Start Page -->
+  <div class="level active" id="startPage">
+    <div class="level-header">
+      <h1>Welcome to Manyano's Ultimate Birthday Adventure!</h1>
+    </div>
+    <p class="subheader">
+      Embark on a quest full of puzzles, surprises, and heartfelt messages.
+      Enter your name and choose an option below!
+    </p>
+    <input type="text" id="playerName" placeholder="Enter your name" class="input-field">
+    <div class="start-options">
+      <button class="btn" onclick="enterQuest()">Enter Quest</button>
+      <button class="btn" onclick="showVideoGallery()">Video Gallery</button>
+      <button class="btn" onclick="showPictureGallery()">Picture Gallery</button>
+    </div>
+  </div>
+
+  <!-- Welcome Section (After Enter Quest) -->
+  <div class="level" id="welcomePage">
+    <div class="level-header">
+      <h1>Welcome, <span id="welcomeName"></span>!</h1>
+    </div>
+    <div class="welcome-content">
+      <img src="manyano.jpg" alt="Manyano" class="welcome-image">
+      <p class="subheader">Manyano, born 13 February 1993, you are cherished and celebrated today!</p>
+      <div class="balloon-animation"></div>
+    </div>
+    <button class="btn" onclick="transitionToLevel(1)">Begin Quest</button>
+  </div>
+
+  <!-- Video Gallery Page -->
+  <div class="level" id="videoGallery">
+    <div class="level-header">
+      <h1>Video Gallery</h1>
+    </div>
+    <div class="gallery-content">
+      <!-- Replace with your own videos -->
+      <iframe width="300" height="200" src="videos/1.pm4" frameborder="0" allowfullscreen></iframe>
+      <iframe width="300" height="200" src="videos/2.pm4" frameborder="0" allowfullscreen></iframe>
+       <iframe width="300" height="200" src="videos/3.pm4" frameborder="0" allowfullscreen></iframe>
+       <iframe width="300" height="200" src="videos/4.pm4" frameborder="0" allowfullscreen></iframe>
+       <iframe width="300" height="200" src="videos/5.pm4" frameborder="0" allowfullscreen></iframe>
+       <iframe width="300" height="200" src="videos/6.pm4" frameborder="0" allowfullscreen></iframe>
+       <iframe width="300" height="200" src="videos/7.pm4" frameborder="0" allowfullscreen></iframe>
+       <iframe width="300" height="200" src="videos/8.pm4" frameborder="0" allowfullscreen></iframe>
+       <iframe width="300" height="200" src="videos/9.pm4" frameborder="0" allowfullscreen></iframe>
+       <iframe width="300" height="200" src="videos/10.pm4" frameborder="0" allowfullscreen></iframe>
+       <iframe width="300" height="200" src="videos/11.pm4" frameborder="0" allowfullscreen></iframe>
+      
+      
+    </div>
+    <button class="btn" onclick="goBackToStart()">Back to Main</button>
+  </div>
+
+  <!-- Picture Gallery Page -->
+  <div class="level" id="pictureGallery">
+    <div class="level-header">
+      <h1>Picture Gallery</h1>
+    </div>
+    <div class="gallery-content">
+      <!-- Replace with your own pictures -->
+      <img src="images/1.jpg" alt="Pic 1">
+      <img src="images/2.jpg" alt="Pic 2">
+      <img src="images/3.jpg" alt="Pic 2">
+      <img src="images/4.jpg" alt="Pic 2">
+      <img src="images/5.jpg" alt="Pic 2">
+      <img src="images/6.jpg" alt="Pic 2">
+      <img src="images/7.jpg" alt="Pic 2">
+      <img src="images/8.jpg" alt="Pic 2">
+      <img src="images/9.jpg" alt="Pic 2">
+      <img src="images/10.jpg" alt="Pic 2">
+      <img src="images/11.jpg" alt="Pic 2">
+      <img src="images/12.jpg" alt="Pic 2">
+      <img src="images/13.jpg" alt="Pic 2">
+      <img src="images/14.jpg" alt="Pic 2">
+      <img src="images/15.jpg" alt="Pic 2">
+      <img src="images/16.jpg" alt="Pic 2">
+      <img src="images/17.jpg" alt="Pic 2">
+      <img src="images/18.jpg" alt="Pic 2">
+      <img src="images/19.jpg" alt="Pic 2">
+      <img src="images/20.jpg" alt="Pic 2">
+      <img src="images/21.jpg" alt="Pic 2">
+      <img src="images/22.jpg" alt="Pic 2">
+      <img src="images/23.jpg" alt="Pic 2">
+
+
+
+
+      
+    </div>
+    <button class="btn" onclick="goBackToStart()">Back to Main</button>
+  </div>
+
+  <!-- Progress Tracker (Hidden on Start, Welcome & Gallery Pages) -->
+  <div class="progress-container" id="progressTracker" style="display:none;">
+    <div class="progress-bar">
+      <div class="progress-step active"><i class="fas fa-puzzle-piece"></i></div>
+      <div class="progress-step"><i class="fas fa-sync-alt"></i></div>
+      <div class="progress-step"><i class="fas fa-question-circle"></i></div>
+      <div class="progress-step"><i class="fas fa-gift"></i></div>
+      <div class="progress-step"><i class="fas fa-image"></i></div>
+      <div class="progress-step"><i class="fas fa-birthday-cake"></i></div>
+    </div>
+  </div>
+
+  <div class="container">
+    <!-- Level 1: Word Puzzle -->
+    <div class="level" id="level1">
+      <div class="level-header">
+        <h1><i class="fas fa-puzzle-piece"></i> Word Quest</h1>
+        <div class="stats">
+          <span id="timer">02:00</span>
+          <span class="score"><i class="fas fa-star"></i> <span id="score">0</span></span>
+          <button class="btn friend-btn" onclick="askFriend()">Ask a Friend</button>
+        </div>
+      </div>
+      <p class="subheader">Find the hidden words and you could win Great prizes, it is your birthday anyway</p>
+      <div id="wordGrid" class="word-grid"></div>
+      <div class="hint-container">
+        <button id="hintButton" class="btn" onclick="showHint()">
+          <i class="fas fa-lightbulb"></i> Hint (<span id="hintCount">3</span>)
+        </button>
+      </div>
+      <div class="nav-buttons">
+        <button class="btn nav-btn" onclick="goToStartPage()">Previous</button>
+        <!-- In Level 1, the Next button is available if the user wishes to move on (but normally, the modal triggers on completion) -->
+        <button class="btn nav-btn" onclick="transitionToLevel(2)">Next</button>
+      </div>
+    </div>
+
+    <!-- Level 2: Wheel of Fortune -->
+    <div class="level" id="level2">
+      <div class="level-header">
+        <h1><i class="fas fa-sync-alt"></i> Wheel of Fortune</h1>
+        <div class="stats">
+          <span class="attempts"><i class="fas fa-redo"></i> <span id="spinCount">0</span>/3</span>
+          <button class="btn friend-btn" onclick="askFriend()">Ask a Friend</button>
+        </div>
+      </div>
+      <div class="wheel-container">
+        <div class="wheel" id="wheel">
+          <div class="wheel-pointer"></div>
+        </div>
+      </div>
+      <button onclick="spinWheel()" class="btn spin-button">
+        <i class="fas fa-sync-alt"></i> SPIN!
+      </button>
+      <div id="prizeDisplay" class="prize-display"></div>
+      <div class="nav-buttons">
+        <button class="btn nav-btn" onclick="transitionToLevel(1)">Previous</button>
+        <button class="btn nav-btn" onclick="transitionToLevel(3)">Next</button>
+      </div>
+    </div>
+
+    <!-- Level 3: Birthday Trivia -->
+    <div class="level" id="level3">
+      <div class="level-header">
+        <h1><i class="fas fa-question-circle"></i> Birthday Trivia</h1>
+        <div class="stats">
+          <span class="score"><i class="fas fa-star"></i> <span id="quizScore">0</span></span>
+          <span class="progress"><span id="currentQuestion">1</span>/10</span>
+          <button class="btn friend-btn" onclick="askFriend()">Ask a Friend</button>
+        </div>
+      </div>
+      <div id="quizContainer"></div>
+      <div class="nav-buttons">
+        <button class="btn nav-btn" onclick="transitionToLevel(2)">Previous</button>
+        <!-- Claim Prize button becomes enabled after trivia is complete -->
+        <button class="btn nav-btn" onclick="transitionToLevel(4)" id="quizNextBtn" disabled>Claim Prize</button>
+      </div>
+    </div>
+
+    <!-- Level 4: Gift Gauntlet -->
+    <div class="level" id="level4">
+      <div class="level-header">
+        <h1><i class="fas fa-gift"></i> Gift Gauntlet</h1>
+        <div class="stats">
+          <span class="offer">Current Offer: <span id="currentOffer">R0</span></span>
+          <button class="btn friend-btn" onclick="askFriend()">Ask a Friend</button>
+        </div>
+      </div>
+      <div id="dealBoxGrid" class="box-grid"></div>
+      <div class="remaining-boxes">Boxes Left: <span id="remainingBoxes">15</span></div>
+      <div class="nav-buttons">
+        <button class="btn nav-btn" onclick="transitionToLevel(3)">Previous</button>
+        <button class="btn nav-btn" onclick="showDealModal()" id="dealNextBtn">Claim Prize</button>
+      </div>
+    </div>
+
+    <!-- Level 5: Image Puzzle -->
+    <div class="level" id="level5">
+      <div class="level-header">
+        <h1><i class="fas fa-image"></i> Image Puzzle</h1>
+        <div class="stats">
+          <button class="btn friend-btn" onclick="askFriend()">Ask a Friend</button>
+        </div>
+      </div>
+      <p class="subheader">Reassemble the 3×3 image puzzle!</p>
+      <div id="imagePuzzle" class="image-puzzle"></div>
+      <div class="nav-buttons">
+        <button class="btn nav-btn" onclick="transitionToLevel(4)">Previous</button>
+        <button class="btn nav-btn" onclick="checkImagePuzzle()">Claim Prize</button>
+      </div>
+    </div>
+
+    <!-- Level 6: Final Reveal -->
+    <div class="level" id="level6">
+      <div class="final-reveal">
+        <h1>Happy Birthday, <span class="name" id="playerDisplayName">Manyano</span>! 🎉</h1>
+        <p class="birthdate">Born: 13 February</p>
+        <p class="birthdate">On this special day, we celebrate you—your kindness, your strength, and                    the joy you bring to those around you. May your day be filled with love, laughter, and all the                wonderful things that make you smile.</p>
+        <p class="birthdate">As you step into another year of life, may it be filled with endless           opportunities, exciting adventures, and moments that warm your heart. You are truly one of a kind, and today,   we honor the amazing person you are!</p>
+        <p class="birthdate">Wishing you a birthday as incredible as you are, Manyano! 🎊🥳</p>
+        
+
+        <div class="celebration-animation">
+          <div class="firework"></div>
+          <div class="firework"></div>
+          <div class="firework"></div>
+        </div>
+        <div class="achievements">
+          <div class="achievement-card">
+            <i class="fas fa-trophy"></i>
+            <h3>Total Score</h3>
+            <p class="total-score" id="finalScore">0</p>
+          </div>
+          <div class="achievement-card">
+            <i class="fas fa-gift"></i>
+            <h3>Prizes Won</h3>
+            <p class="prizes" id="prizesWon">0</p>
+          </div>
+        </div>
+        <div class="personal-message">
+          <p>Manyano, you are deeply loved and cherished. Happy Birthday!</p>
+          <img src="manyano.jpg" alt="Manyano" class="birthday-image">
+          <div class="social-share">
+            <button class="btn share-btn"><i class="fab fa-instagram"></i></button>
+            <button class="btn share-btn"><i class="fab fa-facebook"></i></button>
+            <button class="btn share-btn"><i class="fab fa-twitter"></i></button>
+          </div>
+        </div>
+        <div class="nav-buttons">
+          <button class="btn nav-btn" onclick="restartGame()">Restart</button>
+          <button class="btn nav-btn" onclick="goToStartPage()">Main Menu</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Friend Help Modal -->
+  <div id="friendModal" class="popup" style="display:none;">
+    <div class="popup-content">
+      <p id="friendMessage"></p>
+      <button class="btn" onclick="closeFriendModal()">Close</button>
+    </div>
+  </div>
+
+  <!-- Prize Modal -->
+  <div id="prizeModal" class="popup" style="display:none;">
+    <div class="popup-content">
+      <h2 id="prizeTitle" style="font-size:2.5rem; font-weight:bold;"></h2>
+      <button class="btn" onclick="closePrizeModal()">Claim Prize</button>
+    </div>
+  </div>
+
+  <!-- Deal Modal -->
+  <div id="dealModal" class="popup" style="display:none;">
+    <div class="popup-content">
+      <h2 id="dealText" style="font-size:2.3rem; font-weight:bold;"></h2>
+      <div class="modal-buttons">
+        <button class="btn" onclick="acceptDeal()">Accept Deal</button>
+        <button class="btn" onclick="tryAgainDeal()">Try Again</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Celebratory Video Modal -->
+  <div id="videoModal" class="popup" style="display:none;">
+    <div class="popup-content">
+      <video id="celebrationVideo" width="100%" controls autoplay>
+        <source src="celebration-video.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
+      <button class="btn" onclick="closeVideoModal()">Continue</button>
+    </div>
+  </div>
+
+  <!-- Audio Elements -->
+  <audio id="backgroundMusic" loop>
+    <source src="happy-music.mp3" type="audio/mpeg">
+  </audio>
+  <audio id="celebrationSound">
+    <source src="celebration.mp3" type="audio/mpeg">
+  </audio>
+
+  <script src="script.js"></script>
+</body>
+</html>
