@@ -55,19 +55,19 @@ const quizQuestions = [
   {
     question: "If you weren't a CA, what would you have been?",
     options: ["Doctor", "Lawyer", "Environmental Scientist", "Economist"],
-    answer: 3,
+    answer: 2,
     hint: "Think life, ocean and animals."
   },
   {
     question: "What are your favourite flowers?",
     options: ["Lillies", "Roses", "Tulips", "Daisy"],
-    answer: 3,
+    answer: 2,
     hint: "Small, sweet, and delightful."
   },
   {
     question: "Which hobby does she love the most?",
     options: ["Dancing", "Reading", "Cooking", "Traveling"],
-    answer: 0,
+    answer: 1,
     hint: "She loves to move to the rhythm."
   },
   {
