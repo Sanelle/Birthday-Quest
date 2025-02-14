@@ -680,7 +680,7 @@ function showCelebratoryVideo() {
 
 function closeVideoModal() {
   document.getElementById("videoModal").style.display = "none";
-  transitionToLevel(6);
+ // transitionToLevel(6);
 }
 
 /*********************************
