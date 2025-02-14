@@ -24,7 +24,7 @@ const wordPuzzleConfig = {
 let foundWords = new Set();
 let currentHintIndex = 0;
 let wordPuzzleScore = 0;
-let puzzleTimer = 120; // seconds
+let puzzleTimer = 120; // seconds (2 minutes)
 let puzzleTimerInterval = null;
 const gridRows = 8, gridCols = 8;
 
@@ -146,7 +146,6 @@ function goToWelcomePage() {
 function showVideoGallery() {
   hideAllLevels();
   document.getElementById("videoGallery").classList.add("active");
-  // Allow video to play for some time before closing the modal or transitioning
 }
 
 function showPictureGallery() {
@@ -186,7 +185,7 @@ function transitionToLevel(level) {
   updateProgress(level);
   friendHelpUsed[level] = false;
   
-  // Clear any level-specific timers if needed
+  // Only Level 1 uses a timer; other levels are untimed.
   if (level === 1) {
     currentHintIndex = 0;
     foundWords.clear();
@@ -198,21 +197,17 @@ function transitionToLevel(level) {
     spinCount = 0;
     document.getElementById("spinCount").textContent = spinCount;
     document.getElementById("prizeDisplay").textContent = "";
-    startLevelTimer(2);
   } else if (level === 3) {
     currentQuizIndex = 0;
     quizScore = 0;
     document.getElementById("quizScore").textContent = quizScore;
     showQuiz();
-    startLevelTimer(3);
   } else if (level === 4) {
     remainingBoxes = totalBoxes;
     document.getElementById("remainingBoxes").textContent = remainingBoxes;
     createDealBoxes();
-    startLevelTimer(4);
   } else if (level === 5) {
     createImagePuzzle();
-    startLevelTimer(5);
   } else if (level === 6) {
     document.getElementById("finalScore").textContent = totalScore;
     document.getElementById("prizesWon").textContent = spinCount; // Example metric
@@ -298,8 +293,8 @@ function toggleLetterSelection(cell) {
       document.getElementById("score").textContent = wordPuzzleScore;
       if (foundWords.size === wordPuzzleConfig.words.length) {
         clearInterval(puzzleTimerInterval);
-        // When complete, show prize modal; clicking Next transitions to Level 2.
-        showPrizeModal("You have won your self a bracelet, like the one on your wishlist. It's definitely the one on your wishlist!", true);
+        // When complete, show prize modal that remains until user clicks "Claim Prize".
+        showPrizeModal("You have won yourself a bracelet, like the one on your wishlist. It's definitely the one on your wishlist!", false);
       }
     }
   }
@@ -325,17 +320,15 @@ function showHint() {
   }
 }
 
+// Only Level 1 uses a timer. No auto-transition when time is up.
 function startPuzzleTimer() {
   puzzleTimer = 120;
   document.getElementById("timer").textContent = formatTime(puzzleTimer);
   if (puzzleTimerInterval) clearInterval(puzzleTimerInterval);
   puzzleTimerInterval = setInterval(() => {
-    puzzleTimer--;
-    document.getElementById("timer").textContent = formatTime(puzzleTimer);
-    if (puzzleTimer <= 0) {
-      clearInterval(puzzleTimerInterval);
-      showPrizeModal("Time's up! Moving to Level 2.", false);
-      setTimeout(() => transitionToLevel(2), 2000);
+    if (puzzleTimer > 0) {
+      puzzleTimer--;
+      document.getElementById("timer").textContent = formatTime(puzzleTimer);
     }
   }, 1000);
 }
@@ -369,7 +362,7 @@ function spinWheel() {
     totalScore += spinCount < maxSpins ? 50 : 500;
     spinButton.disabled = false;
     if (spinCount >= maxSpins) {
-      showPrizeModal(prize, true);
+      showPrizeModal(prize, false);
     }
   }, 4000);
 }
@@ -384,23 +377,17 @@ function showQuiz() {
     return;
   }
   container.innerHTML = "";
-  // If all questions are answered, show the Next button.
   if (currentQuizIndex >= quizQuestions.length) {
-    // Reveal the Next button
     const nextBtn = document.getElementById("quizNextBtn");
     if (nextBtn) {
       nextBtn.style.display = "block";
       nextBtn.disabled = false;
     }
-    showPrizeModal("Trivia Complete!", true);
+    showPrizeModal("Trivia Complete!", false);
     return;
   }
-  // Hide the Next button while quiz is in progress
   const nextBtn = document.getElementById("quizNextBtn");
   if (nextBtn) nextBtn.style.display = "none";
-  
-  // Disable the Next button during the question
-  if (nextBtn) nextBtn.disabled = true;
   
   const q = quizQuestions[currentQuizIndex];
   const questionEl = document.createElement("h2");
@@ -413,7 +400,6 @@ function showQuiz() {
     btn.addEventListener("click", () => checkAnswer(index, btn));
     container.appendChild(btn);
   });
-  // Add a hint button for trivia
   const hintBtn = document.createElement("button");
   hintBtn.textContent = "Show Hint";
   hintBtn.className = "btn";
@@ -434,34 +420,15 @@ function checkAnswer(selectedIndex, btnElement) {
     document.getElementById("quizScore").textContent = quizScore;
     setTimeout(() => {
       currentQuizIndex++;
-      if (currentQuizIndex < quizQuestions.length) {
-        showQuiz();
-      } else {
-        // When all questions are answered, show the Next button
-        const nextBtn = document.getElementById("quizNextBtn");
-        if (nextBtn) {
-          nextBtn.style.display = "block";
-          nextBtn.disabled = false;
-        }
-        showPrizeModal("Trivia Complete!", true);
-      }
-    }, 2000);
+      showQuiz();
+    }, 1500);
   } else {
     btnElement.classList.add("incorrect");
     showPrizeModal("Incorrect. The correct answer is: " + q.options[q.answer], false);
     setTimeout(() => {
       currentQuizIndex++;
-      if (currentQuizIndex < quizQuestions.length) {
-        showQuiz();
-      } else {
-        const nextBtn = document.getElementById("quizNextBtn");
-        if (nextBtn) {
-          nextBtn.style.display = "block";
-          nextBtn.disabled = false;
-        }
-        showPrizeModal("Trivia Complete!", true);
-      }
-    }, 3000);
+      showQuiz();
+    }, 2500);
   }
 }
 
@@ -496,11 +463,11 @@ function handleBoxClick(index, boxElement) {
     boxElement.classList.add("winner");
     boxElement.textContent = "Grand Prize!";
     totalScore += 500;
-    showPrizeModal("Grand Prize!", true);
+    showPrizeModal("Grand Prize!", false);
     setTimeout(() => showCelebratoryVideo(), 2000);
   } else {
     const offer = Math.floor(Math.random() * (3000 - 1000 + 1)) + 1000;
-    document.getElementById("currentOffer").textContent = "M" + offer;
+    document.getElementById("currentOffer").textContent = "R" + offer;
     showDealModal(offer, boxElement);
   }
 }
@@ -518,7 +485,7 @@ function acceptDeal() {
   const dealModal = document.getElementById("dealModal");
   const offer = parseInt(dealModal.dataset.offer);
   totalScore += offer;
-  showPrizeModal("Deal accepted! You win R" + offer + "!", true);
+  showPrizeModal("Deal accepted! You win R" + offer + "!", false);
   dealModal.style.display = "none";
   setTimeout(() => showCelebratoryVideo(), 2000);
 }
@@ -535,7 +502,7 @@ function tryAgainDeal() {
   document.getElementById("remainingBoxes").textContent = remainingBoxes;
   if (remainingBoxes <= 1) {
     totalScore += 500;
-    showPrizeModal("Only one box left! It holds the Grand Prize!", true);
+    showPrizeModal("Only one box left! It holds the Grand Prize!", false);
     setTimeout(() => showCelebratoryVideo(), 2000);
   }
 }
@@ -546,12 +513,10 @@ function tryAgainDeal() {
 function createImagePuzzle() {
   const puzzleContainer = document.getElementById("imagePuzzle");
   puzzleContainer.innerHTML = "";
-  // Initialize puzzle pieces (numbers 0 to 8)
   imagePuzzlePieces = [];
   for (let i = 0; i < 9; i++) {
     imagePuzzlePieces.push(i);
   }
-  // Shuffle pieces randomly
   imagePuzzlePieces.sort(() => 0.5 - Math.random());
   for (let i = 0; i < 9; i++) {
     const piece = document.createElement("div");
@@ -592,7 +557,7 @@ function checkImagePuzzle() {
     }
   });
   if (correct) {
-    showPrizeModal("Image Puzzle Solved!", true);
+    showPrizeModal("Image Puzzle Solved!", false);
   }
 }
 
@@ -620,10 +585,10 @@ function askFriend() {
       message = "Your friend says: 'Keep trying! The grand prize is hidden among the boxes.'";
       break;
     case 5:
-      message = "Your friend says: 'Arrange the pieces to reveal the complete image!'";
+      message = "Your friend says: 'Arrange the pieces to reveal the complete image!'"; 
       break;
     case 6:
-      message = "Your friend says: 'Happy Birthday Manyano! Enjoy your day!'";
+      message = "Your friend says: 'Happy Birthday Manyano! Enjoy your day!'"; 
       break;
     default:
       message = "Your friend sends warm wishes!";
@@ -638,17 +603,54 @@ function closeFriendModal() {
 }
 
 /*********************************
- * PRIZE MODAL FUNCTIONS
+ * PRIZE MODAL FUNCTIONS (with Prize Image)
  *********************************/
-function showPrizeModal(text, autoClose = true) {
+// In the HTML, ensure the prize modal contains an <img id="prizeImage"> element.
+function showPrizeModal(text, autoClose = false) {
   const prizeModal = document.getElementById("prizeModal");
   document.getElementById("prizeTitle").textContent = text;
-  prizeModal.style.display = "flex";
-  if (autoClose) {
-    setTimeout(() => {
-      closePrizeModal();
-    }, 4000);
+  
+  // Set an image based on the prize text
+  const prizeImage = document.getElementById("prizeImage");
+  let imageUrl = "";
+  switch (text) {
+    case "Paid-for Night Out!":
+      imageUrl = "night_out.jpg";
+      break;
+    case "You have won yourself A Bag taken directly from your wishlist.":
+      imageUrl = "bag.jpg";
+      break;
+    case "You change your Whatsapp profile pic to Saint.":
+      imageUrl = "profile_change.jpg";
+      break;
+    case "Write your mom a love letter.":
+      imageUrl = "love_letter.jpg";
+      break;
+    case "Buy your nephews and nieces pizza.":
+      imageUrl = "pizza.jpg";
+      break;
+    case "Trivia Complete!":
+      imageUrl = "trivia.jpg";
+      break;
+    case "You won a pink laptop bag, it's on your wishlist":
+      imageUrl = "laptop_bag.jpg";
+      break;
+    case "Grand Prize!":
+      imageUrl = "grand_prize.jpg";
+      break;
+    case "Image Puzzle Solved!":
+      imageUrl = "image_puzzle.jpg";
+      break;
+    // Additional cases as needed...
+    default:
+      imageUrl = "default_prize.jpg";
   }
+  if (prizeImage) {
+    prizeImage.src = imageUrl;
+  }
+  
+  prizeModal.style.display = "flex";
+  // No autoClose; the modal stays until the user clicks "Claim Prize."
 }
 
 function closePrizeModal() {
@@ -659,7 +661,7 @@ function closePrizeModal() {
   } else if (currentLevel === 2) {
     transitionToLevel(3);
   } else if (currentLevel === 3) {
-    // If trivia is complete, the Next button will be shown instead of auto transitioning
+    // If trivia is complete, show the Next button instead of auto transitioning.
     if (currentQuizIndex >= quizQuestions.length) {
       document.getElementById("quizNextBtn").style.display = "block";
     }
@@ -680,28 +682,14 @@ function showCelebratoryVideo() {
 
 function closeVideoModal() {
   document.getElementById("videoModal").style.display = "none";
- // transitionToLevel(6);
+  transitionToLevel(6);
 }
 
 /*********************************
- * LEVEL TIMER FUNCTION
+ * (Removed LEVEL TIMER FOR LEVELS 2-5)
  *********************************/
-function startLevelTimer(level) {
-  let levelTime = 60; // 60-second timer per level
-  const timerElement = document.getElementById("levelTimer");
-  timerElement.textContent = `Time left: ${levelTime}s`;
-  const levelTimerInterval = setInterval(() => {
-    levelTime--;
-    timerElement.textContent = `Time left: ${levelTime}s`;
-    if (levelTime <= 0) {
-      clearInterval(levelTimerInterval);
-      showPrizeModal("Time's up! Continue or move to the next level?", false);
-      // Show buttons to allow the user to continue or proceed
-      document.getElementById("continueBtn").style.display = "block";
-      document.getElementById("nextLevelBtn").style.display = "block";
-    }
-  }, 1000);
-}
+// We no longer start a level timer for levels 2-5 so that the user can play freely.
+// Only Level 1 uses a timer (via startPuzzleTimer).
 
 /*********************************
  * UTILITY FUNCTIONS (Balloons, Confetti, Audio)
