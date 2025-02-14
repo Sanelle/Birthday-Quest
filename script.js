@@ -615,10 +615,10 @@ function showPrizeModal(text, autoClose = false) {
   let imageUrl = "";
   switch (text) {
     case "Paid-for Night Out!":
-      imageUrl = "night_out.jpg";
+     videoUrl = "https://vimeo.com/1056857398";
       break;
-    case "You have won yourself A Bag taken directly from your wishlist.":
-      imageUrl = "bag.jpg";
+    case "Ted Baker's Allicon-Croc Effect Extra Large Icon Bag Black":
+      imageUrl = "https://i.postimg.cc/cJvGtDWv/tedbaker.jpg";
       break;
     case "You change your Whatsapp profile pic to Saint.":
       imageUrl = "profile_change.jpg";
@@ -629,8 +629,8 @@ function showPrizeModal(text, autoClose = false) {
     case "Buy your nephews and nieces pizza.":
       imageUrl = "pizza.jpg";
       break;
-    case "Trivia Complete!":
-      imageUrl = "trivia.jpg";
+    case "You win this baby!":
+      imageUrl = "https://i.postimg.cc/mk8mwsNB/bracelet.jpg";
       break;
     case "You won a pink laptop bag, it's on your wishlist":
       imageUrl = "laptop_bag.jpg";
