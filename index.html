@@ -34,17 +34,24 @@
     </div>
     <div class="welcome-content">
       <img src="https://i.postimg.cc/bJY1mJFp/landing.jpg" alt="Manyano" class="welcome-image">
-      <p class="subheader">Manyano, born 13 February 1993, you are cherished and celebrated today!</p>
-      <p class="birthdate">On this special day, we celebrate you—your kindness, your strength, and the joy you bring to those around you. May your day be filled with love, laughter, and all the wonderful things that make you smile.</p>
-      <p class="birthdate">As you step into another year of life, may it be filled with endless opportunities, exciting adventures, and moments that warm your heart. You are truly one of a kind, and today, we honor the amazing person you are!</p>
-      <p class="birthdate">Wishing you a birthday as incredible as you are, Manyano! 🎊🥳</p>
+      <p class="subheader">
+        Manyano, born 13 February 1993, you are cherished and celebrated today!
+      </p>
+      <p class="birthdate">
+        On this special day, we celebrate you—your kindness, your strength, and the joy you bring to those around you.
+      </p>
+      <p class="birthdate">
+        May your day be filled with love, laughter, and all the wonderful things that make you smile.
+      </p>
+      <p class="birthdate">
+        Wishing you a birthday as incredible as you are, Manyano! 🎊🥳
+      </p>
       <iframe src="https://player.vimeo.com/video/1056579180?title=0&amp;byline=0&amp;portrait=0&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479" width="638" height="360" frameborder="0" allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media" title="videoplayback"></iframe>
       <div class="balloon-animation"></div>
     </div>
     <button class="btn" onclick="transitionToLevel(1)">Begin Quest</button>
   </div>
-
-  <!-- Video Gallery Page -->
+ <!-- Video Gallery Page -->
   <div class="level" id="videoGallery">
     <div class="level-header">
       <h1>Video Gallery</h1>
@@ -110,7 +117,6 @@
     </div>
     <button class="btn" onclick="goBackToStart()">Back to Main</button>
   </div>
-
   <!-- Progress Tracker (Hidden on Start, Welcome & Gallery Pages) -->
   <div class="progress-container" id="progressTracker" style="display:none;">
     <div class="progress-bar">
@@ -122,7 +128,7 @@
       <div class="progress-step"><i class="fas fa-birthday-cake"></i></div>
     </div>
   </div>
-  
+
   <!-- Global Level Timer -->
   <div id="levelTimer" class="level-timer"></div>
 
@@ -137,7 +143,7 @@
           <button class="btn friend-btn" onclick="askFriend()">Ask a Friend</button>
         </div>
       </div>
-      <p class="subheader">Find the hidden words and you could win great prizes—it’s your birthday after all!</p>
+      <p class="subheader">Find the hidden words in the 8×8 grid!</p>
       <div id="wordGrid" class="word-grid"></div>
       <div class="hint-container">
         <button id="hintButton" class="btn" onclick="showHint()">
@@ -187,8 +193,7 @@
       <div id="quizContainer"></div>
       <div class="nav-buttons">
         <button class="btn nav-btn" onclick="transitionToLevel(2)">Previous</button>
-        <!-- Next button with id "quizNextBtn" is now added for trivia -->
-        <button class="btn nav-btn" id="quizNextBtn" onclick="transitionToLevel(4)" disabled style="display:none;">Next</button>
+        <button class="btn nav-btn" id="quizNextBtn" onclick="transitionToLevel(4)" disabled style="display:none;">Claim Prize</button>
       </div>
     </div>
 
@@ -205,10 +210,10 @@
       <div class="remaining-boxes">Boxes Left: <span id="remainingBoxes">15</span></div>
       <div class="nav-buttons">
         <button class="btn nav-btn" onclick="transitionToLevel(3)">Previous</button>
-        <button class="btn nav-btn" onclick="transitionToLevel(5)">Next</button>
+        <button class="btn nav-btn" onclick="showDealModal()" id="dealNextBtn">Claim Prize</button>
       </div>
     </div>
-    
+
     <!-- Level 5: Image Puzzle -->
     <div class="level" id="level5">
       <div class="level-header">
@@ -221,7 +226,7 @@
       <div id="imagePuzzle" class="image-puzzle"></div>
       <div class="nav-buttons">
         <button class="btn nav-btn" onclick="transitionToLevel(4)">Previous</button>
-        <button class="btn nav-btn" onclick="transitionToLevel(6)">Next</button>
+        <button class="btn nav-btn" onclick="transitionToLevel(6)">Claim Prize</button>
       </div>
     </div>
 
@@ -229,11 +234,7 @@
     <div class="level" id="level6">
       <div class="final-reveal">
         <h1>Happy Birthday, <span class="name" id="playerDisplayName">Manyano</span>! 🎉</h1>
-        <p class="birthdate">Born: 13 February</p>
-        <p class="birthdate">On this special day, we celebrate you—your kindness, your strength, and the joy you bring to those around you. May your day be filled with love, laughter, and all the wonderful things that make you smile.</p>
-        <p class="birthdate">As you step into another year of life, may it be filled with endless opportunities, exciting adventures, and moments that warm your heart. You are truly one of a kind, and today, we honor the amazing person you are!</p>
-        <p class="birthdate">Wishing you a birthday as incredible as you are, Manyano! 🎊🥳</p>
-        
+        <p class="birthdate">Born: 13 February 1993</p>
         <div class="celebration-animation">
           <div class="firework"></div>
           <div class="firework"></div>
@@ -268,6 +269,9 @@
     </div>
   </div>
 
+  <!-- Global Level Timer -->
+  <div id="levelTimer" class="level-timer"></div>
+
   <!-- Friend Help Modal -->
   <div id="friendModal" class="popup" style="display:none;">
     <div class="popup-content">
@@ -276,12 +280,13 @@
     </div>
   </div>
 
-  <!-- Prize Modal (Updated for Timer Options) -->
+  <!-- Prize Modal (with Prize Image) -->
   <div id="prizeModal" class="popup" style="display:none;">
     <div class="popup-content">
       <h2 id="prizeTitle" style="font-size:2.5rem; font-weight:bold;"></h2>
+      <img id="prizeImage" src="" alt="Prize Image" style="max-width:100%; margin: 10px 0;">
       <div id="prizeModalButtons">
-         <button class="btn" id="prizeDefaultBtn" onclick="closePrizeModal()">Next</button>
+         <button class="btn" id="prizeDefaultBtn" onclick="closePrizeModal()">Claim Prize</button>
          <button class="btn" id="continueBtn" style="display:none;" onclick="continueLevel()">Continue</button>
          <button class="btn" id="nextLevelBtn" style="display:none;" onclick="nextLevel()">Next Level</button>
       </div>
