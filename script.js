@@ -147,9 +147,6 @@ function showVideoGallery() {
   hideAllLevels();
   document.getElementById("videoGallery").classList.add("active");
   // Allow video to play for some time before closing the modal or transitioning
-  setTimeout(() => {
-    closeVideoModal();
-  }, 5000); // 5 seconds delay
 }
 
 function showPictureGallery() {
