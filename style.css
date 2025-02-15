@@ -92,19 +92,27 @@ body {
 .start-options {
   margin: 1rem 0;
 }
+
+/* Gallery Content */
 .gallery-content {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
   justify-content: center;
+  gap: 10px;
 }
-.gallery-content iframe,
 .gallery-content img {
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
   width: 150px;
   height: 150px;
   object-fit: cover;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+.gallery-content iframe {
+  width: 320px;
+  height: 570px;
+  border-radius: 10px;
+  object-fit: cover;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 
 /* Welcome Page */
@@ -385,7 +393,7 @@ body {
 }
 
 /* Global Level Timer */
-/* Since only Level 1 (Word Puzzle) should have a timer, hide the global timer */
+/* Hidden by default – display it when needed */
 .level-timer {
   display: none;
 }
@@ -439,23 +447,9 @@ body {
     flex-wrap: wrap;
     justify-content: center;
   }
-}
-.gallery-content {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 10px; /* Adjust spacing between images */
-}
-
-.gallery-content img {
-  width: 150px; /* Set a fixed width */
-  height: 150px; /* Set a fixed height */
-  object-fit: cover; /* Ensures the image fills the space while maintaining aspect ratio */
-  border-radius: 10px; /* Optional: Adds rounded corners */
-}
-.gallery-content iframe {
-  width: 320px; /* Standardized width */
-  height: 570px; /* Standardized height */
-  border-radius: 10px; /* Optional: Rounded corners */
-  object-fit: cover; /* Ensures videos fit properly */
+  .gallery-content iframe,
+  .gallery-content img {
+    width: 100px; /* Slightly smaller on mobile */
+    height: 100px;
+  }
 }
