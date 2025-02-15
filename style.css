@@ -106,13 +106,22 @@ body {
   object-fit: cover;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-}
-.gallery-content iframe {
-  width: 320px;
-  height: 570px;
+}.gallery-content iframe {
+  width: 300px;
+  aspect-ratio: 1 / 1;
   border-radius: 10px;
   object-fit: cover;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive adjustments for mobile */
+@media (max-width: 768px) {
+  .gallery-content iframe {
+    width: 150px;
+    aspect-ratio: 1 / 1;
+  }
+}
+
 }
 
 /* Welcome Page */
